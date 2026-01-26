@@ -1,0 +1,22 @@
+class Solution:
+    def minimumAbsDifference(self, arr: List[int]) -> List[List[int]]:
+        arr.sort()
+        ans=[]
+        diff=float('inf')
+        for i in range(len(arr)-1):#finding min diff
+            min_diff=abs(arr[i+1]-arr[i])
+            diff=min(diff,min_diff)
+
+        for i in range(len(arr)-1):
+            if(arr[i+1]-arr[i])==diff:
+                ans.append((arr[i],arr[i+1]))
+            
+        return ans
+
+
+
+
+
+
+
+        
