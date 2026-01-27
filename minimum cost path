@@ -1,0 +1,126 @@
+class Solution:
+    def minCost(self, n: int, edges: List[List[int]]) -> int:
+        from collections import defaultdict
+        import heapq
+
+        adj, rev = defaultdict(list), defaultdict(list)
+        for u, v, w in edges:
+            adj[u].append((v, w))
+            rev[v].append((u, w))
+
+        INF = float("inf")
+        dist = [[INF, INF] for _ in range(n)]
+        dist[0][0] = 0
+
+        pq = [(0, 0, 0)]  # cost, node, used_at_this_node
+
+        while pq:
+            cost, u, used = heapq.heappop(pq)
+            if cost > dist[u][used]:
+                continue
+
+            # normal edges → next node switch unused
+            for v, w in adj[u]:
+                if cost + w < dist[v][0]:
+                    dist[v][0] = cost + w
+                    heapq.heappush(pq, (cost + w, v, 0))
+
+            # reverse edges → use switch at u only
+            if used == 0:
+                for v, w in rev[u]:
+                    if cost + 2*w < dist[v][0]:
+                        dist[v][0] = cost + 2*w
+                        heapq.heappush(pq, (cost + 2*w, v, 0))
+
+        ans = min(dist[n-1])
+        return ans if ans < INF else -1
+
+
+
+
+        dry run:
+
+        
+        🔢 Test Case
+n = 3
+edges = [[2,1,1],[1,0,1],[2,0,16]]
+Edges:
+2 → 1 (1)
+1 → 0 (1)
+2 → 0 (16)
+Start = 0
+Target = 2
+🧱 Build graphs
+Outgoing edges adj
+0: []
+1: [(0,1)]
+2: [(1,1), (0,16)]
+Incoming edges rev
+0: [(1,1), (2,16)]
+1: [(2,1)]
+2: []
+📦 Initialization
+dist = [
+  [0, ∞],   # node 0
+  [∞, ∞],   # node 1
+  [∞, ∞]    # node 2
+]
+Priority queue:
+pq = [(0, 0, 0)]
+Meaning:
+cost = 0
+at node 0
+switch at node 0 NOT used
+▶️ Step 1: Pop (0, 0, 0)
+Normal edges from 0
+None
+Reverse edges (used = 0 → allowed)
+Incoming to 0:
+1 → 0 (1) → reverse → 0 → 1
+cost = 2
+update dist[1][0] = 2
+2 → 0 (16) → reverse → 0 → 2
+cost = 32
+update dist[2][0] = 32
+Push to pq:
+(2, 1, 0)
+(32, 2, 0)
+▶️ Step 2: Pop (2, 1, 0)
+At node 1, switch unused.
+Normal edges
+1 → 0 (1)
+cost = 3
+dist[0][0] already 0 → ignore
+Reverse edges
+Incoming to 1:
+2 → 1 (1) → reverse → 1 → 2
+cost = 4
+update dist[2][0] = 4 ✅ (better than 32)
+Push:
+(4, 2, 0)
+▶️ Step 3: Pop (4, 2, 0)
+We reached target node 2.
+Normal edges
+2 → 1 (1)
+cost = 5 → worse than 2 → ignore
+2 → 0 (16)
+cost = 20 → worse than 0 → ignore
+Reverse edges
+Incoming to 2:
+none
+▶️ Step 4: Pop (32, 2, 0)
+Outdated path → ignored.
+✅ Final distances
+dist = [
+  [0, ∞],
+  [2, ∞],
+  [4, ∞]
+]
+Answer:
+min(dist[2]) = 4
+🎯 Final Answer
+4
+🧠 Key observation from dry run
+Switch is used at the current node only
+After moving, the next node has a fresh switch
+That’s why we could reverse twice (at node 0 and node 1)
