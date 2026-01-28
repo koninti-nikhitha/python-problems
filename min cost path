@@ -1,0 +1,25 @@
+class Solution:
+    def minCost(self, n: int, edges: List[List[int]]) -> int:
+        graph = defaultdict(list)
+        
+        for u, v, w in edges:
+            graph[u].append((v, w))
+            graph[v].append((u, 2*w)) #reverse-move v -> u with cost 2*w
+
+        dist = [0] + [float('inf')]*(n-1)
+        pq = [(0, 0)] # dist, node
+
+        while pq:
+            d, node = heapq.heappop(pq)
+            if d > dist[node]:
+                continue
+            if node == n - 1:
+                return d
+            
+            for v, w in graph[node]:
+                new_d = d + w
+                if new_d < dist[v]:
+                    dist[v] = new_d
+                    heapq.heappush(pq, (new_d, v))
+            
+        return -1
