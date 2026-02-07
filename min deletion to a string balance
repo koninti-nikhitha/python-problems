@@ -1,0 +1,11 @@
+def minimumDeletions(s: str) -> int:
+    deletions = 0
+    b_count = 0
+
+    for c in s:
+        if c == 'b':
+            b_count += 1
+        else:  # c == 'a'
+            deletions = min(deletions + 1, b_count)
+
+    return deletions
