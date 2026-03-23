@@ -1,0 +1,47 @@
+class Node:
+    def __init__(self):
+        self.links=[None]*26
+        self.flag=False
+    def containskey(self,ch):
+        if self.links[ord(ch)-ord('a')]!=None:
+            return True
+        return False
+    def put(self,ch,node):
+        self.links[ord(ch)-ord('a')]=node
+    def get(self,ch):
+        return self.links[ord(ch)-ord('a')]
+
+class Trie:
+    def __init__(self):
+        self.root=Node()
+    def insert(self,word):
+        node=self.root
+        for ch in word:
+            if(node.containskey(ch)==False):
+                node.put(ch,Node())
+            node=node.get(ch)
+        node.flag=True
+    def prefixExists(self,word):
+        node=self.root
+        for ch in word:
+            if(node.containskey(ch)==False):
+                return False
+            node=node.get(ch)
+            if node.flag==False:
+                return False
+        return True
+            
+class Solution:
+    def longestValidWord(self, words):
+        trie=Trie()
+        for word in words:
+            trie.insert(word)
+        longest=""
+        for word in words:
+            if(trie.prefixExists(word)):
+                if(len(word)>len(longest)):
+                    longest=word
+                elif(len(word)==len(longest) and word<longest):
+                    longest=word
+        return longest
+        
