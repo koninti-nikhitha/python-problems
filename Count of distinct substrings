@@ -1,0 +1,27 @@
+class Node:
+    def __init__(self):
+        self.links = [None]*26
+    def containskey(self,ch):
+        if(self.links[ord(ch)-ord('a')]!=None):
+            return True 
+        return False
+    def put(self,ch,node):
+        self.links[ord(ch)-ord('a')] = node 
+    def get(self,ch):
+        return self.links[ord(ch)-ord('a')] 
+class Solution:
+    def __init__(self):
+        self.root=Node()
+    def countSubs(self, s):
+        n=len(s)
+        c=0
+        for i in range(0,n):
+            node=self.root
+            for j in range(i,n):
+                if(node.containskey(s[j])==False):
+                    node.put(s[j],Node())
+                    c+=1
+                node=node.get(s[j])
+        return c
+                
+       
