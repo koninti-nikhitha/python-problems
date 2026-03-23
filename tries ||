@@ -1,0 +1,58 @@
+from os import *
+from sys import *
+from collections import *
+from math import *
+class Node:
+    def __init__(self):
+        self.links=[None]*26
+        self.ew=0
+        self.cp=0
+    def containskey(self,ch):
+        
+        if(self.links[ord(ch)-ord('a')]!=None):
+            return True 
+        return False 
+
+    def put(self,ch,node):
+        self.links[ord(ch)-ord('a')]=node
+    def get(self,ch):
+        return self.links[ord(ch)-ord('a')]
+
+class Trie:
+    def __init__(self):
+        self.root=Node()
+    def insert(self, word):
+        node=self.root
+        for ch in word:
+            if(node.containskey(ch)==False):
+                node.put(ch,Node())
+            node=node.get(ch)
+            node.cp+=1
+        node.ew+=1
+        
+    def countWordsEqualTo(self, word):
+        node=self.root
+        for ch in word:
+            if(node.containskey(ch)==False):
+                return 0
+            node=node.get(ch)
+        return node.ew
+
+
+    def countWordsStartingWith(self, word):
+        node=self.root
+        for ch in word:
+            if(node.containskey(ch)==False):
+                return 0
+            node=node.get(ch)
+        return node.cp
+
+    def erase(self, word):
+        node=self.root
+        for ch in word:
+            if(node.containskey(ch)==False):
+                return False
+            node=node.get(ch)
+            node.cp-=1
+        node.ew-=1
+        
