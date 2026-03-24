@@ -1,0 +1,65 @@
+# from collections import deque
+# class Solution:
+#     def isBipartite(self, V, edges):
+#         adj=[]
+# 	    for _ in range(V):
+# 	        adj.append([])
+# 	    for n,m in edges:
+# 	         adj[n].append(m)
+# 	         adj[m].append(n)
+	  
+# 	    color=[-1]*V
+# 	    for n in range(0,V):
+# 	        if(color[n]==-1):
+# 	            color[n]=0
+# 	            q=deque([])
+# 	            q.append(n)
+# 	            while(len(q)>0):
+# 	                node=q.popleft()
+# 	                for i in adj[node]:
+# 	                    if(color[i]==-1):
+# 	                        color[i]=1-color[node]                                                           
+# 	                        q.append(i)
+# 	                    elif(color[i]==color[node]):
+# 	                        return False
+#         return True
+        
+class Solution:
+    def isBipartite(self, V, edges):
+        def dfs(n):
+            for i in adj[n]:
+                if color[i]==-1:
+                    color[i]=1-color[n]
+                    if dfs(i)==False:
+                        return False
+                elif(color[i]==color[n]):
+                    return False
+            return True
+        adj=[]
+        for _ in range(0,V):
+            adj.append([])
+        for n,m in edges:
+            adj[n].append(m)
+            adj[m].append(n)
+        color=[-1]*V
+        for n in range(V):
+            if(color[n]==-1):
+                color[n]=0
+                if(dfs(n)==False):
+                    return False
+        return True
+                    
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
