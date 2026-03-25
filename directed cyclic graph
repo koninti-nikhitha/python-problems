@@ -1,0 +1,65 @@
+# class Solution:
+#     def isCyclic(self, V, edges):
+#         def dfs(n):
+#             for i in adj[n]:
+#                 if(vis[i]==0):
+#                     vis[i]=1
+#                     pathvis[i]=1
+#                     if(dfs(i)):
+#                         return True
+#                 elif(pathvis[i]==1):
+#                     return True
+#             pathvis[n]=0
+        # adj=[]
+        # for _ in range(0,V):
+        #     adj.append([])
+        # for n,m in edges:
+        #     adj[n].append(m)
+        # vis=[0]*V
+        # pathvis=[0]*V
+        # for n in range(V):
+        #     if(vis[n]==0):
+        #         vis[n]=1
+        #         pathvis[n]=1
+        #         if(dfs(n)):
+        #             return True
+        # return False
+from collections import deque
+
+class Solution:
+    def isCyclic(self, V, edges):
+        # Step 1: Build adjacency list
+        adj = [[] for _ in range(V)]
+        for u, v in edges:
+            adj[v].append(u)
+
+        # Step 2: Compute indegree
+        indegree = [0] * V
+        for i in range(V):
+            for j in adj[i]:
+                indegree[j] += 1
+                
+        # Step 3: Push nodes with indegree 0 into queue
+        q = deque()
+        for i in range(V):
+            if indegree[i] == 0:
+                q.append(i)
+
+        # Step 4: Process nodes
+        # count = 0
+        ans=[]
+        while q:
+            node = q.popleft()
+            # count += 1
+            ans.append(node)
+
+            for neighbor in adj[node]:
+                indegree[neighbor] -= 1
+                if indegree[neighbor] == 0:
+                    q.append(neighbor)
+
+        # Step 5: Check cycle
+        if len(ans) == V:
+            return False   # No cycle
+        else:
+            return True    # Cycle exists
