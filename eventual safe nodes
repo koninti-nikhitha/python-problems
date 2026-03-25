@@ -1,0 +1,76 @@
+from collections import deque
+class Solution:
+    def safeNodes(self, V, edges):
+        adj=[]
+        for _ in range(0,V):
+            adj.append([])
+        for u,v in edges:
+            adj[v].append(u)
+        indegree=[0]*V
+       
+        for i in range(0,V):
+            for j in adj[i]:
+                indegree[j]+=1
+        q=deque([])
+        for n in range(0,V):
+            if(indegree[n]==0):
+                q.append(n)
+        ans=[]
+        while(q):
+            node=q.popleft()
+            ans.append(node)
+            for i in adj[node]:
+                indegree[i]-=1
+                if(indegree[i]==0):
+                    q.append(i)
+        return sorted(ans)
+    
+# class Solution:
+#     def safeNodes(self, V, edges):
+#         def dfs(n):
+            
+#             for i in adj[n]:
+#                 if(vis[i]==0):
+#                     vis[i]=1
+#                     pathvis[i]=1
+#                     if(dfs(i)):
+#                         return True
+#                 elif(pathvis[i]==1):
+#                     return True
+            
+#             safe[n]=1
+#             pathvis[n]=0
+#         adj=[]
+#         for _ in range(0,V):
+#             adj.append([])
+#         for n,m in edges:
+#             adj[n].append(m)
+#         vis=[0]*V
+#         pathvis=[0]*V
+#         safe=[0]*V
+#         for n in range(0,V):
+#             if(vis[n]==0):
+                
+#                 vis[n]=1
+#                 pathvis[n]=1
+#                 dfs(n)
+#         ans=[]
+#         for i in range(0,V):
+#             if(safe[i]==1):
+#                 ans.append(i)
+#         return ans
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
