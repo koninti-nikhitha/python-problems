@@ -1,0 +1,30 @@
+from collections import deque
+class Solution:
+    # Returns shortest distances from src to all other vertices
+    def dijkstra(self, V, edges, src):
+        
+        adj=[]
+        for _ in range(0,V):
+            
+            adj.append([])
+        
+        for n,m,edgeWt in edges:
+            adj[n].append((m,edgeWt))
+            adj[m].append((n,edgeWt))
+        
+        distance=[float('inf')]*V
+        distance[src]=0
+        pq=[]
+        heapq.heappush(pq,(0,src))
+        while(pq):
+            dist,node=heapq.heappop(pq)
+            if (dist>distance[node]):
+                    continue
+            for adjNode,edgeWt in adj[node]:
+                if(dist+edgeWt<distance[adjNode]):
+                    distance[adjNode]=dist+edgeWt
+                    heapq.heappush(pq,(dist+edgeWt,adjNode))
+                
+                
+        return distance
+        
