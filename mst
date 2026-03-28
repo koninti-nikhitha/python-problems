@@ -1,0 +1,32 @@
+class Disjoint:  # n = 7 
+    def __init__(self,n):
+        self.rank = [0]*(n+1)
+        self.parent = [i for i in range(0,n+1)]
+    def findUparent(self,node):  # path compression 
+        if(node == self.parent[node]):
+            return node
+        self.parent[node] = self.findUparent(self.parent[node])
+        return self.parent[node]
+    def findParent(self,u,v):
+        return self.findUparent(u) == self.findUparent(v) 
+    def unionByRank(self,u,v):
+        ultimateParentOfU = self.findUparent(u)
+        ultimateParentOfV = self.findUparent(v) 
+        if(ultimateParentOfV == ultimateParentOfU):
+            return
+        if(self.rank[ultimateParentOfU]<self.rank[ultimateParentOfV]):
+            self.parent[ultimateParentOfU] = ultimateParentOfV 
+            
+        elif(self.rank[ultimateParentOfV]<self.rank[ultimateParentOfU]):
+            self.parent[ultimateParentOfV] = ultimateParentOfU
+            
+        elif(self.rank[ultimateParentOfU] == self.rank[ultimateParentOfV]):
+            self.parent[ultimateParentOfV] = ultimateParentOfU
+            self.rank[ultimateParentOfU]+=1 
+ds = Disjoint(7) 
+ds.unionByRank(1,2)
+ds.unionByRank(2,3) 
+if(ds.findParent(2,3)): 
+    print(True)
+else:
+    print(False)
